@@ -1,0 +1,69 @@
+<!-- templates/profile.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+   <br>
+   <h1 class="title">
+      Welcome, {{ user.name }}!
+   </h1>
+   <br>
+   <a class="btn btn-danger" role="button" href="{{ url_for('dashboard.delete_account') }}">Nutzerkonto löschen</a>
+   <a class="btn btn-warning" role="button" href="{{ url_for('dashboard.change_password') }}">Passwort ändern</a>
+   <br>
+   <br>
+   <table class="table table-striped">
+      <thead>
+         <tr>
+            <th>Nutzername</th>
+            <th>E-Mail Adresse</th>
+            <th>Benachrichtigungen</th>
+         </tr>
+      </thead>
+      <tbody>
+         <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            {% if user.notification == "" %}
+               <td><span style="color: red;">Deaktiviert</span> <a href=""><span class="bi bi-pencil-square text-primary"></span></a></td>
+            {% else %}
+               <td>{{ user.getNotificationString() }} <a href=""><span class="bi bi-pencil-square text-primary"></span></a></td>
+            {% endif %}
+         </tr>
+      </tbody>
+   </table>
+   <br>
+   <h3 class="title">Server verwalten</h3>
+   <br>
+   <a class="btn btn-primary" style="float: right;" role="button" href="{{ url_for('dashboard.register_server') }}">+ Server hinzufügen</a>
+   <br>
+   <br>
+   <table class="table table-striped">
+      <thead>
+         <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Zuletzt Online</th>
+            <th>Letzte Antwort</th>
+            <th>Aktionen</th>
+         </tr>
+      </thead>
+      <tbody>
+         {% for server in servers %}
+            <tr>
+               <td>{{ server.id }}</td>
+               <td>{{ server.name }}</td>
+               <td>{{ server.last_seen }}</td>
+               {% if server.getStatus() == "Online" %}
+                  <td><span style="color: rgb(3, 194, 3);">{{ server.last_response }}</span></td>
+               {% else %}
+                  <td><span style="color: red;">{{ server.getStatus() }}</span></td>
+               {% endif %}
+               <td class="text-center"><a style="margin-right: 5%;" href="{{ url_for('dashboard.edit_server', server_id=server.id) }}"><span class="bi bi-pencil-square text-primary"></span></a> <a href="{{ url_for('dashboard.delete_server', server_id=server.id) }}"><span class="bi-trash-fill text-primary"></span></a></td>
+            </tr>
+         {% endfor %}
+      </tbody>
+   </table>
+</div>
+{% endblock %}

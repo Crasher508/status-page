@@ -1,0 +1,93 @@
+<!-- templates/index.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+   .home {
+		height: 100vh;
+		width: 100%;
+		background: url("{{ url_for('static', filename='img/photo-1544197150-b99a580bb7a8.jpg') }}");
+		background-color: rgba(0, 0, 0, 0.61);
+      background-size: cover;
+		text-align: center;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+		color: white;
+	}
+
+   .overlay {
+      background-color: rgba(0, 0, 0, 0.61);
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+		text-align: center;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+		color: white;
+   }
+</style>
+<div class="home">
+   <div class="overlay">
+      <h1 class="title">
+         Status Monitor
+      </h1>
+      <h2 class="subtitle">
+         Kostenlos, schnell und sicher.
+      </h2>
+   </div>
+</div>
+<div class="bg-dark w-100 text-start text-white py-2 py-lg-2">
+   <p class="m-4 fs-3">Über das Projekt</p>
+</div>
+<div class="container">
+   <br>
+   <p class="m-4 fs-5">Die Erreichbarkeit wichtiger Dienste ist essentiell wichtig. Um nicht ständig selbst nach dem Status z.B. der Webseite schauen zu müssen, gibt es sogenannte Bots. Der StatusServer agiert wie ein solcher, ist simpler in der Einrichtung und kostenfrei! Sie können problemlos die Erreichbarkeit ihres Dienstes durch uns kontrollieren lassen.</p>
+   <br>
+</div>
+<div class="bg-dark w-100 text-start text-white py-2 py-lg-2">
+   <p class="m-4 fs-3">Öffentliche Statusmeldungen</p>
+</div>
+<br>
+<div class="container">
+   <table class="table table-striped">
+      <thead>
+         <tr>
+            <th>Name</th>
+            <th>Uptime</th>
+            <th>Zuletzt Online</th>
+            <th>Letzte Antwort</th>
+         </tr>
+      </thead>
+      <tbody>
+         {% for server in servers %}
+            <tr>
+               <td>{{ server.name }}</td>
+               <td>{{ server.calcOnlinePercentage() }}%</td>
+               <td>{{ server.last_seen }}</td>
+               {% if server.getStatus() == "Online" %}
+                  <td><span style="color: rgb(3, 194, 3);">{{ server.last_response }}</span></td>
+               {% else %}
+                  <td><span style="color: red;">{{ server.getStatus() }}</span></td>
+               {% endif %}
+            </tr>
+         {% endfor %}
+      </tbody>
+   </table>
+</div>
+<br><br>
+    <footer class="text-center bg-dark w-100 flex-shrink-0">
+        <div class="container text-white py-4 py-lg-5">
+            <ul class="list-inline">
+                <li class="list-inline-item me-4"><a href="https://github.com/Crasher508"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-github text-light">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8"></path>
+                </svg></a></li>
+            </ul>
+            <p class="mb-0">Copyright © 2024 Jonathan Beyer</p>
+        </div>
+    </footer>
+{% endblock %}
