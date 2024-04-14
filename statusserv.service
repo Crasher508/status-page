@@ -1,0 +1,13 @@
+[Unit]
+Description=uWSGI instance to serve status-server
+After=network.target
+
+[Service]
+User=statusserv
+Group=www-data
+WorkingDirectory=/home/statusserv
+Environment="PATH=/home/statusserv/venv/bin"
+ExecStart=/home/statusserv/venv/bin/uwsgi --ini uwsgi.ini
+
+[Install]
+WantedBy=multi-user.target

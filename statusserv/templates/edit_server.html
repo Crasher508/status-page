@@ -1,0 +1,158 @@
+<!-- templates/edit_server.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <br>
+    <form method="POST" action="{{ url_for('dashboard.edit_server_post', server_id=server.id) }}">
+        <h3 class="title">Server {{server.name}} bearbeiten</h3>
+        <br>
+        <div class="form-group">
+            <label for="nameInput">Servername</label>
+            <input name="name" class="form-control" type="text" placeholder="Name eingeben" id="nameInput" value="{{server.name}}">
+        </div>
+        <div class="form-group">
+            <label for="protocols">Wähle ein Protokoll:</label><br>
+            <select class="form-control" id="protocols" name="protocol" aria-selected="{{server.getProtocol()}}" disabled>
+                <!--<option value="https">Https Website Anfrage</option>
+                <option value="http">Http Website Anfrage</option>
+                <option value="mcbe">MC Bedrock Server ping</option>
+                <option value="mcje">MC Java Server ping</option>
+                <option value="reachable">Port Anfrage</option>-->
+                {% if server.protocol == "https" %}
+                    <option value="https" selected>Https Website Anfrage</option>
+                    <option value="http">Http Website Anfrage</option>
+                    <option value="mcbe">MC Bedrock Server ping</option>
+                    <option value="mcje">MC Java Server ping</option>
+                    <option value="reachable">Port Anfrage</option>
+                {% elif server.protocol == "http" %}
+                    <option value="https">Https Website Anfrage</option>
+                    <option value="http" selected>Http Website Anfrage</option>
+                    <option value="mcbe">MC Bedrock Server ping</option>
+                    <option value="mcje">MC Java Server ping</option>
+                    <option value="reachable">Port Anfrage</option>
+                {% elif server.protocol == "mcbe" %}
+                    <option value="https">Https Website Anfrage</option>
+                    <option value="http">Http Website Anfrage</option>
+                    <option value="mcbe" selected>MC Bedrock Server ping</option>
+                    <option value="mcje">MC Java Server ping</option>
+                    <option value="reachable">Port Anfrage</option>
+                {% elif server.protocol == "mcje" %}
+                    <option value="https">Https Website Anfrage</option>
+                    <option value="http">Http Website Anfrage</option>
+                    <option value="mcbe">MC Bedrock Server ping</option>
+                    <option value="mcje" selected>MC Java Server ping</option>
+                    <option value="reachable">Port Anfrage</option>
+                {% else %}
+                    <option value="https">Https Website Anfrage</option>
+                    <option value="http">Http Website Anfrage</option>
+                    <option value="mcbe">MC Bedrock Server ping</option>
+                    <option value="mcje">MC Java Server ping</option>
+                    <option value="reachable" selected>Port Anfrage</option>
+                {% endif %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="hostInput">IP/Domain/Url</label>
+            <input name="host" class="form-control" type="text" placeholder="IP/Domain/Url angeben" id="hostInput" value="{{server.host}}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="portInput">Port</label>
+            <input name="port" class="form-control" type="number" placeholder="Port angeben" id="portInput" value="{{server.port}}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="types">Wähle ein Montoring Typ: (Es wird kein neuer API Key generiert!)</label><br>
+            <select class="form-control" id="types" name="type">
+                {% if server.type == "request" %}
+                    <option value="request" selected>Unser System stellt die Anfrage</option>
+                    <option value="self_answer">Rückmeldung per API Key</option>
+                {% else %}
+                    <option value="request">Unser System stellt die Anfrage</option>
+                    <option value="self_answer" selected>Rückmeldung per API Key</option>
+                {% endif %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="visibilities">Sichtbarkeit:</label><br>
+            <select class="form-control" id="visibilities" name="visibility">
+                {% if server.visibility == "public" %}
+                    <option value="public" selected>Öffentlich</option>
+                    <option value="private">Privat</option>
+                {% else %}
+                    <option value="public">Öffentlich</option>
+                    <option value="private" selected>Privat</option>
+                {% endif %}
+            </select>
+        </div>
+        <br>
+        <a class="btn btn-secondary" role="button" href="{{ url_for('dashboard.profile') }}">Zurück</a>
+        {% if current_user.id == server.user_id %}
+            <input class="btn btn-primary" type="submit" value="Speichern">
+        {% else %}
+            <input class="btn btn-primary" type="submit" value="Speichern" disabled>
+        {% endif %}
+    </form>
+    <br>
+    <hr>
+    <br>
+    <h3 class="title">Daten</h3>
+    <br>
+    <table class="table table-striped">
+        <thead>
+           <tr>
+              <th>API Key</th>
+           </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ server.api_key }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table class="table table-striped">
+        <thead>
+           <tr>
+              <th>Aktiv seit</th>
+              <th>Verlässlichkeit</th>
+              <th>Zuletzt Online</th>
+              <th>Letzte Antwort</th>
+           </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ server.since }}</td>
+                <td>{{ server.calcOnlinePercentage() }}%</td>
+                <td>{{ server.last_seen }}</td>
+                {% if server.getStatus() == "Online" %}
+                    <td><span style="color: rgb(3, 194, 3);">{{ server.last_response }}</span></td>
+                {% else %}
+                    <td><span style="color: red;">{{ server.getStatus() }}</span></td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <h3 class="title">Ausfälle</h3>
+    <br>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Datum</th>
+                <th>Nachricht</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for incident in incidents %}
+                <tr>
+                    <td>{{ incident.id }}</td>
+                    <td>{{ incident.time }}</td>
+                    <td>{{ incident.response }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

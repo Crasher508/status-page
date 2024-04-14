@@ -1,0 +1,32 @@
+<!-- templates/signup.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <br>
+    <form method="POST" action="{{ url_for('auth.signup_post') }}">
+        <h3 class="title">Registrieren</h3>
+        <br>
+        <div class="form-group">
+            <label for="emailInput">E-Mail Addresse</label>
+            <input name="email" type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="E-Mail eingeben" required>
+            <small id="emailHelp" class="form-text text-muted">Wir speichern ihre Daten ausschließlich verschlüsselt und teilen diese nicht mit Dritten.</small>
+        </div>
+        <div class="form-group">
+            <label for="nameInput">Benutzername</label>
+            <input name="name" class="form-control" type="text" placeholder="Benutzernamen eingeben" id="nameInput" required>
+        </div>
+        <div class="form-group">
+            <label for="passwordInput">Passwort</label>
+            <input name="password" class="form-control" type="password" placeholder="Passwort eingeben" id="passwordInput" required>
+        </div>
+        <div class="form-group">
+            <label for="passwordRepeatInput">Passwort wiederholen</label>
+            <input name="password-repeat" class="form-control" type="password" placeholder="Passwort erneut eingeben" id="passwordRepeatInput" required>
+        </div>
+        <br>
+        <button class="btn btn-primary" type="submit">Registrieren</button>
+    </form>
+</div>
+{% endblock %}

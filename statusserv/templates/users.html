@@ -1,0 +1,32 @@
+<!-- templates/users.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+   <br>
+   <br>
+   <table class="table table-striped">
+      <thead>
+         <tr>
+            <th>Name</th>
+            <th>E-Mail</th>
+            <th>Aktiv seit</th>
+            <th>Server</th>
+            <th>Aktionen</th>
+         </tr>
+      </thead>
+      <tbody>
+         {% for user in users %}
+            <tr>
+               <td>{{ user.id }}</td>
+               <td>{{ user.email }}</td>
+               <td>{{ user.since }}</td>
+               <td>{{ user.getServerCount() }}</td>
+               <td class="text-center"><a href="{{ url_for('admin.delete_user', user_id=user.id) }}"><span class="bi-trash-fill text-primary"></span></a></td>
+            </tr>
+         {% endfor %}
+      </tbody>
+   </table>
+</div>
+{% endblock %}
