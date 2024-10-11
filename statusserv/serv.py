@@ -89,7 +89,7 @@ def start(run: bool = False) -> Flask|None:
     app = create_app(json_object)
     if not app:
         return None
-    startScheduler(app)
+    # startScheduler(app)
     if run:
         app.run(host=str(json_object["host"]), port=int(json_object["port"]))
     return app
@@ -126,7 +126,7 @@ def scheduleTask(app: Flask):
                 server.last_seen = datetime.now()
             else:
                 if server.last_response == "Online":
-                    #send notification to member
+                    #TODO: send notification to member
                     incident: IncidentHistory = IncidentHistory(server_id=server.id, time=datetime.now(), response=statusResponse)
                     db.session.add(incident)
                     db.session.commit()

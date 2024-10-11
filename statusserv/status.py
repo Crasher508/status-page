@@ -5,7 +5,7 @@ from mcstatus import JavaServer, BedrockServer
 
 def requestWeb(url: str) -> bool:
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
         return response.status_code == 200
     except:
         return False
